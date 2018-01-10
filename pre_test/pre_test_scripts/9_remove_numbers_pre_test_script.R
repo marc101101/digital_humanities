@@ -1,27 +1,35 @@
-x <- readLines("3_hypertexts/Fforde, Jasper - Thursday Next 2 - Lost in a Good Book.txt")
-ffjorde <- toString(x)
-
-y <- readLines("2_shakespeare/tragedies/hamlet.txt")
-hamlet <- toString(y)
-
+install.packages("NLP")
+install.packages("tm")
+install.packages("SnowballC")
+install.packages("textstem")
 library(NLP)
 library(tm)
 library(SnowballC)
 library(textstem)
 
-x <- tm_map(x, stripWhitespace)
-x <- tm_map(x, content_transformer(toLower))
-#x <- tm_map(x, removeWords, stopwords("english")) #TESTEN
-x <- tm_map(x, removeNumbers) # TESTEN
-#x <- lemmatize_strings(x) # TESTEN
-x <- tm_map(x, removePunctuation)
+x <- readLines("3_hypertexts/Fforde, Jasper - Thursday Next 2 - Lost in a Good Book.txt")
+text_corpus <- Corpus(DirSource('3_hypertexts'))
+text_corpus #show corpus meta data
+ffjorde <- toString(x)
 
-y <- tm_map(y, stripWhitespace)
-y <- tm_map(y, content_transformer(toLower))
+y <- readLines("2_shakespeare/tragedies/hamlet.txt")
+hamlet <- toString(y)
+
+
+
+ffjorde <- tm_map(ffjorde, stripWhitespace)
+ffjorde <- tm_map(ffjorde, content_transformer(toLower))
+#x <- tm_map(x, removeWords, stopwords("english")) #TESTEN
+ffjorde <- tm_map(ffjorde, removeNumbers) # TESTEN
+#x <- lemmatize_strings(x) # TESTEN
+ffjorde <- tm_map(ffjorde, removePunctuation)
+
+hamlet <- tm_map(hamlet, stripWhitespace)
+hamlet <- tm_map(hamlet, content_transformer(toLower))
 #y <- tm_map(y, removeWords, stopwords("english")) #TESTEN
-y <- tm_map(y, removeNumbers) # TESTEN
+hamlet <- tm_map(hamlet, removeNumbers) # TESTEN
 #y <- lemmatize_strings(y) # TESTEN  tis wird zu this. evtl mit dem treetagger testen, dann jedoch andere quellendateien zuerst generieren
-y <- tm_map(y, removePunctuation)
+hamlet <- tm_map(hamlet, removePunctuation)
 
 
 hamlet_tokens <- tokenize_ngrams(hamlet, n = 9)
@@ -35,7 +43,7 @@ score_base <- 0
 LL <- list()
 
 #While condition = how many ngrams will be compared with the hypertext; attention: all 30k ngrams take at least 30 mins!
-while(count < length(hamlet_tokens)) { 
+while(count < 100) { 
   token <- hamlet_tokens[count]
   result <- (align_local(token, ffjorde))
   if(result$score > score_base){
