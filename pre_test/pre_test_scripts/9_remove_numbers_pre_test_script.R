@@ -9,29 +9,23 @@ library(tm)
 library(SnowballC)
 library(textstem)
 library(textreuse)
-#x <- readLines("3_hypertexts/Fforde, Jasper - Thursday Next 2 - Lost in a Good Book.txt")
+
 ffjorde <- Corpus(DirSource('3_hypertexts'))
-ffjorde #show corpus meta data
-#ffjorde <- toString(x)
-
 hamlet <- Corpus(DirSource('2_shakespeare/tragedies'))
-#y <- readLines("2_shakespeare/tragedies/hamlet.txt")
-#hamlet <- toString(y)
-
 
 
 ffjorde <- tm_map(ffjorde, stripWhitespace)
 ffjorde <- tm_map(ffjorde, content_transformer(tolower))
-#x <- tm_map(x, removeWords, stopwords("english")) #TESTEN
-ffjorde <- tm_map(ffjorde, removeNumbers) # TESTEN
-#x <- lemmatize_strings(x) # TESTEN
+#ffjorde <- tm_map(ffjorde, removeWords, stopwords("english"))
+ffjorde <- tm_map(ffjorde, removeNumbers)
+#ffjorde <- lemmatize_strings(ffjorde)
 ffjorde <- tm_map(ffjorde, removePunctuation)
 
 hamlet <- tm_map(hamlet, stripWhitespace)
 hamlet <- tm_map(hamlet, content_transformer(tolower))
-#y <- tm_map(y, removeWords, stopwords("english")) #TESTEN
-hamlet <- tm_map(hamlet, removeNumbers) # TESTEN
-#y <- lemmatize_strings(y) # TESTEN  tis wird zu this. evtl mit dem treetagger testen, dann jedoch andere quellendateien zuerst generieren
+#hamlet <- tm_map(hamlet, removeWords, stopwords("english"))
+hamlet <- tm_map(hamlet, removeNumbers)
+#hamlet <- lemmatize_strings(hamlet)
 hamlet <- tm_map(hamlet, removePunctuation)
 
 ffjorde <- toString(ffjorde)
@@ -44,12 +38,12 @@ counter <- 0
 LL <- list()
 
 #While condition = how many ngrams will be compared with the hypertext; attention: all 30k ngrams take at least 30 mins!
-while(count < 100) { 
+while(count < length(hamlet_tokens)) { 
   token <- hamlet_tokens[count]
   result <- (align_local(token, ffjorde))
     
   #select threshold for alignment score
-  if (result$score >= 5){
+  if (result$score >= 9){
     #check for duplicate alignments in preceding ngram
     previouscount <- count - 3
     previoustoken <- hamlet_tokens[previouscount]
@@ -65,7 +59,6 @@ while(count < 100) {
     }
     
   } else {
-    #print("alignment score too low!")
   }
   count <- count + 3 #9grams overlap in 3-word-steps
 }
