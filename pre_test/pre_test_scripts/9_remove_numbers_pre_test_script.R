@@ -2,56 +2,54 @@ install.packages("NLP")
 install.packages("tm")
 install.packages("SnowballC")
 install.packages("textstem")
+install.packages("textreuse")
+
 library(NLP)
 library(tm)
 library(SnowballC)
 library(textstem)
+library(textreuse)
+#x <- readLines("3_hypertexts/Fforde, Jasper - Thursday Next 2 - Lost in a Good Book.txt")
+ffjorde <- Corpus(DirSource('3_hypertexts'))
+ffjorde #show corpus meta data
+#ffjorde <- toString(x)
 
-x <- readLines("3_hypertexts/Fforde, Jasper - Thursday Next 2 - Lost in a Good Book.txt")
-text_corpus <- Corpus(DirSource('3_hypertexts'))
-text_corpus #show corpus meta data
-ffjorde <- toString(x)
-
-y <- readLines("2_shakespeare/tragedies/hamlet.txt")
-hamlet <- toString(y)
+hamlet <- Corpus(DirSource('2_shakespeare/tragedies'))
+#y <- readLines("2_shakespeare/tragedies/hamlet.txt")
+#hamlet <- toString(y)
 
 
 
 ffjorde <- tm_map(ffjorde, stripWhitespace)
-ffjorde <- tm_map(ffjorde, content_transformer(toLower))
+ffjorde <- tm_map(ffjorde, content_transformer(tolower))
 #x <- tm_map(x, removeWords, stopwords("english")) #TESTEN
 ffjorde <- tm_map(ffjorde, removeNumbers) # TESTEN
 #x <- lemmatize_strings(x) # TESTEN
 ffjorde <- tm_map(ffjorde, removePunctuation)
 
 hamlet <- tm_map(hamlet, stripWhitespace)
-hamlet <- tm_map(hamlet, content_transformer(toLower))
+hamlet <- tm_map(hamlet, content_transformer(tolower))
 #y <- tm_map(y, removeWords, stopwords("english")) #TESTEN
 hamlet <- tm_map(hamlet, removeNumbers) # TESTEN
 #y <- lemmatize_strings(y) # TESTEN  tis wird zu this. evtl mit dem treetagger testen, dann jedoch andere quellendateien zuerst generieren
 hamlet <- tm_map(hamlet, removePunctuation)
 
-
-hamlet_tokens <- tokenize_ngrams(hamlet, n = 9)
-
-count <-  1
+ffjorde <- toString(ffjorde)
+hamlet <- toString(hamlet)
+hamlet_tokens <- tokenize_ngrams(hamlet[1], n = 9)
 
 #While loop: identify optimal local alignment for each Hamlet ngram in the whole Ffjorde text.
 count <-  1 #must not be zero!
 counter <- 0
-score_base <- 0
 LL <- list()
 
 #While condition = how many ngrams will be compared with the hypertext; attention: all 30k ngrams take at least 30 mins!
 while(count < 100) { 
   token <- hamlet_tokens[count]
   result <- (align_local(token, ffjorde))
-  if(result$score > score_base){
-    score_base <- result$score
-  }
     
   #select threshold for alignment score
-  if (result$score >= 9){
+  if (result$score >= 5){
     #check for duplicate alignments in preceding ngram
     previouscount <- count - 3
     previoustoken <- hamlet_tokens[previouscount]
@@ -71,5 +69,5 @@ while(count < 100) {
   }
   count <- count + 3 #9grams overlap in 3-word-steps
 }
-write.csv(LL,file="pre_test_result/9_remove_numbers_pre_test_script.csv")
+write.csv(LL,file="pre_test_results/9_remove_numbers_pre_test_script.csv")
 
