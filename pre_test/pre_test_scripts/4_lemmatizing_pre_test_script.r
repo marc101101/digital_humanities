@@ -11,17 +11,15 @@ library(textstem)
 
 x <- tm_map(x, stripWhitespace)
 x <- tm_map(x, content_transformer(toLower))
-x <- tm_map(x, removeWords, stopwords("english")) #TESTEN
-x <- tm_map(x, removeNumbers) # TESTEN
-x <- tm_map(x, stemDocument) # TESTEN
+#x <- tm_map(x, removeWords, stopwords("english")) #TESTEN
+#x <- tm_map(x, removeNumbers) # TESTEN
 x <- lemmatize_strings(x) # TESTEN
 x <- tm_map(x, removePunctuation)
 
 y <- tm_map(y, stripWhitespace)
 y <- tm_map(y, content_transformer(toLower))
-y <- tm_map(y, removeWords, stopwords("english")) #TESTEN
-y <- tm_map(y, removeNumbers) # TESTEN
-y <- tm_map(y, stemDocument) # TESTEN
+#y <- tm_map(y, removeWords, stopwords("english")) #TESTEN
+#y <- tm_map(y, removeNumbers) # TESTEN
 y <- lemmatize_strings(y) # TESTEN  tis wird zu this. evtl mit dem treetagger testen, dann jedoch andere quellendateien zuerst generieren
 y <- tm_map(y, removePunctuation)
 
@@ -45,7 +43,7 @@ while(count < length(hamlet_tokens)) {
   }
     
   #select threshold for alignment score
-  if (result$score >= 8){
+  if (result$score >= 9){
     #check for duplicate alignments in preceding ngram
     previouscount <- count - 3
     previoustoken <- hamlet_tokens[previouscount]
@@ -65,5 +63,5 @@ while(count < length(hamlet_tokens)) {
   }
   count <- count + 3 #9grams overlap in 3-word-steps
 }
-
+write.csv(LL,file="pre_test_result/4_lemmatizing_pre_test_script.csv")
 
