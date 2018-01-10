@@ -1,0 +1,19 @@
+1) Vergleich jedes Hypertextes mit jedem einzelnen Hypotext.
+2) N-Gram (2-12)? Welche Größe macht denn Sinn?
+3) Skip N-Gram
+4) Stoppwort-Entfernung
+5) Lemmatisierung
+6) Resultat ist immer wie viele matchen mit dem Gold Standard?
+
+Versuche:
+1) N-Gram 8 
+2) N-Gram 9
+3) N-Gram 10
+4) skip_ngrams n = 3, k = 2
+5) skip_ngrams ??
+6) skip_ngrams ??
+7) Stoppwort-Entfernung: Bestes Resultat aus 1 - 6
+8) Lemmatisierung: Bestes Resultat aus 1 - 6
+9) align_local => match: Bestes Resultat aus 1 - 8
+10) align_local => mismatch: Bestes Resultat aus 1 - 8
+11) align_local => gap: Bestes Resultat aus 1 - 8
