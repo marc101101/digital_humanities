@@ -44,12 +44,12 @@ counter <- 0
 LL <- list()
 
 #While condition = how many ngrams will be compared with the hypertext; attention: all 30k ngrams take at least 30 mins!
-while(count < 100) { 
+while(count < length(hamlet_tokens)) { 
   token <- hamlet_tokens[count]
   result <- (align_local(token, ffjorde))
     
   #select threshold for alignment score
-  if (result$score >= 5){
+  if (result$score >= 9){
     #check for duplicate alignments in preceding ngram
     previouscount <- count - 3
     previoustoken <- hamlet_tokens[previouscount]
